@@ -1,4 +1,4 @@
-# Ore Vein Miner (Fabric, Minecraft 26.2, клиентский)
+# Ore Vein Miner (Fabric, Minecraft 26.2 и 26.3, клиентский)
 
 Ломаешь один блок руды киркой — мод сам докапывает всю соединённую жилу.
 
@@ -13,8 +13,8 @@
 - Клавиша **V** — включить/выключить (меняется в Настройки → Управление → Ore Vein Miner).
 
 ## Установка
-1. Fabric Loader для 26.2 + Fabric API.
-2. Положить `ore-vein-miner-1.0.0.jar` в `.minecraft/mods`.
+1. Fabric Loader + Fabric API для своей версии (26.2 или 26.3).
+2. Положить jar своей версии (`ore-vein-miner-1.0.0+26.2.jar` или `ore-vein-miner-1.0.0+26.3.jar`) в `.minecraft/mods`.
 
 ## Сборка
 Нужна Java 25: `./gradlew build`, jar появится в `build/libs/`.

@@ -2,7 +2,7 @@ plugins {
 	id 'net.fabricmc.fabric-loom' version "${loom_version}"
 }
 
-version = project.version
+version = "${project.version}+${project.minecraft_version}"
 group = project.group
 
 base {
@@ -16,7 +16,7 @@ dependencies {
 }
 
 processResources {
-	def version = project.version
+	def version = "${project.version}+${project.minecraft_version}"
 	inputs.property "version", version
 
 	filesMatching("fabric.mod.json") {
