@@ -5,7 +5,6 @@ import org.lwjgl.sdl.SDLScancode;
 
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.player.LocalPlayer;
-import net.minecraft.core.component.DataComponents;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.item.component.SwingAnimation;
 
@@ -19,6 +18,6 @@ final class Compat {
 	}
 
 	static void swingMainHand(LocalPlayer player) {
-		player.swing(InteractionHand.MAIN_HAND, player.getMainHandItem().getOrDefault(DataComponents.SWING_ANIMATION, SwingAnimation.DEFAULT), false);
+		player.swing(InteractionHand.MAIN_HAND, SwingAnimation.DEFAULT, false);
 	}
 }
