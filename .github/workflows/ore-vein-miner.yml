@@ -6,6 +6,9 @@ on:
       - '.github/workflows/ore-vein-miner.yml'
   workflow_dispatch:
 
+permissions:
+  contents: write
+
 jobs:
   build:
     runs-on: ubuntu-24.04
@@ -24,3 +27,12 @@ jobs:
         with:
           name: ore-vein-miner
           path: ore-vein-miner/build/libs/
+      # Publish the jar as a release so it can be downloaded by a direct link.
+      - uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ore-vein-miner-latest
+          name: Ore Vein Miner (Minecraft 26.2)
+          body: Client-side vein mining mod for Fabric, Minecraft 26.2. Put the jar into .minecraft/mods together with Fabric API.
+          target_commitish: ${{ github.sha }}
+          files: ore-vein-miner/build/libs/ore-vein-miner-*.jar
+          overwrite_files: true
