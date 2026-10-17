@@ -1,0 +1,7 @@
+{
+	"key.category.oreveinminer.main": "Ore Vein Miner",
+	"key.oreveinminer.toggle": "Вкл/выкл добычу жилы",
+	"oreveinminer.enabled": "Добыча жилы: ВКЛ",
+	"oreveinminer.disabled": "Добыча жилы: ВЫКЛ",
+	"oreveinminer.tool_low": "Добыча жилы остановлена: кирка почти сломалась"
+}

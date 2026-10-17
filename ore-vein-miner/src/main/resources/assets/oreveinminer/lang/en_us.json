@@ -1,0 +1,7 @@
+{
+	"key.category.oreveinminer.main": "Ore Vein Miner",
+	"key.oreveinminer.toggle": "Toggle vein mining",
+	"oreveinminer.enabled": "Vein mining: ON",
+	"oreveinminer.disabled": "Vein mining: OFF",
+	"oreveinminer.tool_low": "Vein mining stopped: pickaxe is about to break"
+}

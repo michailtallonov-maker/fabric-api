@@ -1,0 +1,27 @@
+{
+	"schemaVersion": 1,
+	"id": "oreveinminer",
+	"version": "${version}",
+	"name": "Ore Vein Miner",
+	"description": "Client-side vein mining: break one ore block with a pickaxe and the whole connected vein is mined. Works in singleplayer and on servers.",
+	"authors": [
+		"michailtallonov-maker"
+	],
+	"license": "CC0-1.0",
+	"icon": "assets/oreveinminer/icon.png",
+	"environment": "client",
+	"entrypoints": {
+		"client": [
+			"com.oreveinminer.OreVeinMiner"
+		]
+	},
+	"mixins": [
+		"oreveinminer.mixins.json"
+	],
+	"depends": {
+		"fabricloader": ">=0.19.5",
+		"minecraft": "~26.2",
+		"java": ">=25",
+		"fabric-api": "*"
+	}
+}
