@@ -8,9 +8,6 @@ import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
-import com.mojang.blaze3d.platform.InputConstants;
-import org.lwjgl.glfw.GLFW;
-
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
@@ -23,7 +20,6 @@ import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.ItemTags;
-import net.minecraft.world.InteractionHand;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.block.state.BlockState;
@@ -62,7 +58,7 @@ public final class TunnelMiner implements ClientModInitializer {
 	@Override
 	public void onInitializeClient() {
 		KeyMapping.Category category = KeyMapping.Category.register(Identifier.fromNamespaceAndPath("tunnelminer", "main"));
-		toggleKey = KeyMappingHelper.registerKeyMapping(new KeyMapping("key.tunnelminer.toggle", InputConstants.Type.KEYSYM, GLFW.GLFW_KEY_B, category));
+		toggleKey = KeyMappingHelper.registerKeyMapping(Compat.toggleKey("key.tunnelminer.toggle", category));
 
 		ClientPlayerBlockBreakEvents.AFTER.register(TunnelMiner::onBlockBroken);
 		ClientTickEvents.END_CLIENT_TICK.register(TunnelMiner::onEndTick);
@@ -199,7 +195,7 @@ public final class TunnelMiner implements ClientModInitializer {
 		}
 
 		client.gameMode.continueDestroyBlock(job.current, faceTowardsPlayer(player, job.current));
-		player.swing(InteractionHand.MAIN_HAND);
+		Compat.swingMainHand(player);
 	}
 
 	private static boolean canMine(ClientLevel level, LocalPlayer player, BlockPos pos, ItemStack tool) {

@@ -5,9 +5,6 @@ import java.util.Deque;
 import java.util.HashSet;
 import java.util.Set;
 
-import com.mojang.blaze3d.platform.InputConstants;
-import org.lwjgl.glfw.GLFW;
-
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
@@ -18,7 +15,6 @@ import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
 import net.minecraft.tags.ItemTags;
-import net.minecraft.world.InteractionHand;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
@@ -52,7 +48,7 @@ public final class OreVeinMiner implements ClientModInitializer {
 	@Override
 	public void onInitializeClient() {
 		KeyMapping.Category category = KeyMapping.Category.register(Identifier.fromNamespaceAndPath("oreveinminer", "main"));
-		toggleKey = KeyMappingHelper.registerKeyMapping(new KeyMapping("key.oreveinminer.toggle", InputConstants.Type.KEYSYM, GLFW.GLFW_KEY_V, category));
+		toggleKey = KeyMappingHelper.registerKeyMapping(Compat.toggleKey("key.oreveinminer.toggle", category));
 
 		ClientPlayerBlockBreakEvents.AFTER.register(OreVeinMiner::onBlockBroken);
 		ClientTickEvents.END_CLIENT_TICK.register(OreVeinMiner::onEndTick);
@@ -137,7 +133,7 @@ public final class OreVeinMiner implements ClientModInitializer {
 		}
 
 		client.gameMode.continueDestroyBlock(job.current, faceTowardsPlayer(player, job.current));
-		player.swing(InteractionHand.MAIN_HAND);
+		Compat.swingMainHand(player);
 	}
 
 	private static boolean canMine(ClientLevel level, LocalPlayer player, BlockPos pos, String family) {
