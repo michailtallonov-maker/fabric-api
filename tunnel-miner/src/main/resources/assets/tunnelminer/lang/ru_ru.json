@@ -1,0 +1,7 @@
+{
+	"key.category.tunnelminer.main": "Tunnel Miner",
+	"key.tunnelminer.toggle": "Вкл/выкл туннель 3x3",
+	"tunnelminer.enabled": "Туннель 3x3: ВКЛ",
+	"tunnelminer.disabled": "Туннель 3x3: ВЫКЛ",
+	"tunnelminer.tool_low": "Туннель 3x3 остановлен: кирка почти сломалась"
+}

@@ -1,0 +1,7 @@
+{
+	"key.category.tunnelminer.main": "Tunnel Miner",
+	"key.tunnelminer.toggle": "Toggle 3x3 tunnel mining",
+	"tunnelminer.enabled": "3x3 tunnel: ON",
+	"tunnelminer.disabled": "3x3 tunnel: OFF",
+	"tunnelminer.tool_low": "3x3 tunnel stopped: pickaxe is about to break"
+}
