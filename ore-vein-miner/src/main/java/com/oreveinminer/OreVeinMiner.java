@@ -100,7 +100,7 @@ public final class OreVeinMiner implements ClientModInitializer {
 		LocalPlayer player = client.player;
 		ClientLevel level = client.level;
 
-		if (player == null || level == null || client.gameMode == null || level != job.level || !player.isAlive() || client.screen != null) {
+		if (player == null || level == null || client.gameMode == null || level != job.level || !player.isAlive() || !client.mouseHandler.isMouseGrabbed()) {
 			cancel(client);
 			return;
 		}
