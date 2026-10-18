@@ -32,7 +32,7 @@ public class CustomCrosshairClient implements ClientModInitializer {
 
 		ClientTickEvents.END_CLIENT_TICK.register(client -> {
 			while (openEditor.consumeClick()) {
-				client.setScreen(new CrosshairEditorScreen(client.screen));
+				client.gui.setScreen(new CrosshairEditorScreen(client.gui.screen()));
 			}
 
 			while (toggle.consumeClick()) {
