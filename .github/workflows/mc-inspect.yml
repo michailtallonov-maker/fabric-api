@@ -1,0 +1,36 @@
+name: Inspect MC classes (temporary)
+on:
+  push:
+    paths:
+      - '.github/workflows/mc-inspect.yml'
+jobs:
+  inspect:
+    runs-on: ubuntu-24.04
+    defaults:
+      run:
+        working-directory: custom-crosshair
+    steps:
+      - uses: actions/setup-java@v5
+        with:
+          distribution: 'microsoft'
+          java-version: '25'
+      - uses: actions/checkout@v6
+      - run: chmod +x gradlew && ./gradlew compileJava -q
+      - name: javap
+        run: |
+          JAR=$(find ~/.gradle .gradle -name "minecraft-*26.2*.jar" ! -name "*sources*" 2>/dev/null | grep -v -i server | head -5 | tr '\n' ':')
+          echo "JARS=$JAR"
+          CP=$JAR
+          for c in net.minecraft.client.particle.ParticleEngine net.minecraft.client.particle.Particle net.minecraft.client.particle.SingleQuadParticle net.minecraft.core.particles.DustParticleOptions net.minecraft.core.particles.ColorParticleOption net.minecraft.client.AttackIndicatorStatus; do
+            echo "===== $c"; javap -p -cp "$CP" $c | grep -v "lambda\$" ; done
+          echo "===== ParticleTypes"; javap -p -cp "$CP" net.minecraft.core.particles.ParticleTypes | grep -E "SimpleParticleType|ParticleType<" | sed 's/.*ParticleTypes\.//' | head -150
+          echo "===== GuiGraphicsExtractor"; javap -cp "$CP" net.minecraft.client.gui.GuiGraphicsExtractor | grep -E "blit|fill|text|pose"
+          echo "===== Gui"; javap -p -cp "$CP" net.minecraft.client.gui.Gui | grep -iE "crosshair|attack|Identifier"
+          javap -c -p -constants -cp "$CP" net.minecraft.client.gui.Gui | grep -iE "attack_indicator|crosshair" | head
+          echo "===== ClientPacketListener"; javap -c -p -cp "$CP" net.minecraft.client.multiplayer.ClientPacketListener | grep -A40 "void handleAnimate" | grep -E "invoke|getstatic" | head -30
+          echo "===== Minecraft"; javap -p -cp "$CP" net.minecraft.client.Minecraft | grep -iE "particle|crosshairPick|level;|options;|player;"
+          echo "===== Options"; javap -p -cp "$CP" net.minecraft.client.Options | grep -iE "attackIndicator"
+          echo "===== Player"; javap -p -cp "$CP" net.minecraft.world.entity.player.Player | grep -iE "attackStrength|crit"
+          echo "===== Entity"; javap -p -cp "$CP" net.minecraft.world.entity.Entity | grep -E " (getX|getY|getZ|getBbHeight|getBbWidth|getRandom|level|getEyeY|position|getLookAngle)\("
+          echo "===== ClientLevel"; javap -p -cp "$CP" net.minecraft.client.multiplayer.ClientLevel | grep -iE "particle"
+          echo "===== Screen"; javap -p -cp "$CP" net.minecraft.client.gui.screens.Screen | grep -iE "isPauseScreen|clearWidgets|rebuild|init\(|removed"
