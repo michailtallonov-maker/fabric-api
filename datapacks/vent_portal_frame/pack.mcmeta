@@ -1,7 +1,7 @@
 {
   "pack": {
     "description": "Декоративная рамка портала Энда для админов",
-    "min_format": 101,
+    "min_format": 94,
     "max_format": 999
   }
 }
