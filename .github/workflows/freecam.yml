@@ -1,0 +1,28 @@
+name: Build Freecam
+on:
+  push:
+    paths:
+      - 'freecam/**'
+      - '.github/workflows/freecam.yml'
+  pull_request:
+    paths:
+      - 'freecam/**'
+      - '.github/workflows/freecam.yml'
+  workflow_dispatch:
+jobs:
+  build:
+    runs-on: ubuntu-24.04
+    defaults:
+      run:
+        working-directory: freecam
+    steps:
+      - uses: actions/setup-java@v5
+        with:
+          distribution: 'microsoft'
+          java-version: '25'
+      - uses: actions/checkout@v6
+      - run: chmod +x gradlew && ./gradlew build --stacktrace
+      - uses: actions/upload-artifact@v7
+        with:
+          name: freecam
+          path: freecam/build/libs/

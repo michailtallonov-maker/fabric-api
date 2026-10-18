@@ -1,0 +1,13 @@
+{
+  "required": true,
+  "package": "io.github.michailtallonov.freecam.mixin",
+  "compatibilityLevel": "JAVA_25",
+  "client": [
+    "CameraMixin",
+    "EntityMixin",
+    "FirstPersonHandsAndItemsMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

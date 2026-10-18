@@ -1,0 +1,23 @@
+{
+  "schemaVersion": 1,
+  "id": "freecam",
+  "version": "${version}",
+  "name": "Freecam",
+  "description": "Client-side free camera: detach the camera from your player and fly through walls. Works on any server.",
+  "authors": ["michailtallonov"],
+  "license": "MIT",
+  "environment": "client",
+  "entrypoints": {
+    "client": [
+      "io.github.michailtallonov.freecam.FreecamClient"
+    ]
+  },
+  "mixins": [
+    "freecam.mixins.json"
+  ],
+  "depends": {
+    "fabricloader": ">=0.19.0",
+    "minecraft": "~26.3",
+    "fabric-api": "*"
+  }
+}
