@@ -1,0 +1,24 @@
+name: Build Custom Crosshair mod
+on:
+  push:
+    paths:
+      - 'custom-crosshair/**'
+      - '.github/workflows/custom-crosshair.yml'
+  workflow_dispatch:
+jobs:
+  build:
+    runs-on: ubuntu-24.04
+    defaults:
+      run:
+        working-directory: custom-crosshair
+    steps:
+      - uses: actions/setup-java@v5
+        with:
+          distribution: 'microsoft'
+          java-version: '25'
+      - uses: actions/checkout@v6
+      - run: chmod +x gradlew && ./gradlew build --stacktrace
+      - uses: actions/upload-artifact@v4
+        with:
+          name: custom-crosshair
+          path: custom-crosshair/build/libs/*.jar

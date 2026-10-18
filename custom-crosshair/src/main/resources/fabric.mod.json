@@ -1,0 +1,19 @@
+{
+  "schemaVersion": 1,
+  "id": "customcrosshair",
+  "version": "${version}",
+  "name": "Custom Crosshair",
+  "description": "Draw your own crosshair: pixel editor, colors, size, rotation, flipping, offset. Stays in place in F3 and F5.",
+  "authors": ["michailtallonov-maker"],
+  "license": "Apache-2.0",
+  "environment": "client",
+  "entrypoints": {
+    "client": ["dev.customcrosshair.CustomCrosshairClient"]
+  },
+  "depends": {
+    "fabricloader": ">=0.18.4",
+    "minecraft": "~26.2",
+    "java": ">=25",
+    "fabric-api": "*"
+  }
+}
