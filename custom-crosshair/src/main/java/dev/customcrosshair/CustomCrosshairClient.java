@@ -6,15 +6,18 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import net.minecraft.client.KeyMapping;
+import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.resources.Identifier;
+import net.minecraft.world.InteractionResult;
 
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.keymapping.v1.KeyMappingHelper;
 import net.fabricmc.fabric.api.client.rendering.v1.hud.HudElementRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.hud.VanillaHudElements;
+import net.fabricmc.fabric.api.event.player.AttackEntityCallback;
 
-import dev.customcrosshair.screen.CrosshairEditorScreen;
+import dev.customcrosshair.screen.BaseConfigScreen;
 
 public class CustomCrosshairClient implements ClientModInitializer {
 	public static final String MOD_ID = "customcrosshair";
@@ -32,7 +35,7 @@ public class CustomCrosshairClient implements ClientModInitializer {
 
 		ClientTickEvents.END_CLIENT_TICK.register(client -> {
 			while (openEditor.consumeClick()) {
-				client.gui.setScreen(new CrosshairEditorScreen(client.gui.screen()));
+				client.gui.setScreen(BaseConfigScreen.openLast(client.gui.screen()));
 			}
 
 			while (toggle.consumeClick()) {
@@ -40,6 +43,15 @@ public class CustomCrosshairClient implements ClientModInitializer {
 				config.enabled = !config.enabled;
 				config.save();
 			}
+		});
+
+		// Fires on the client (and on the integrated server in singleplayer, which we ignore).
+		AttackEntityCallback.EVENT.register((player, level, hand, entity, hitResult) -> {
+			if (player instanceof LocalPlayer) {
+				HitParticles.onAttack(entity);
+			}
+
+			return InteractionResult.PASS;
 		});
 
 		// Replace the vanilla crosshair. The vanilla element hides itself in F5 and swaps to the

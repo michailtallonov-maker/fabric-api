@@ -53,8 +53,49 @@ public final class CrosshairConfig {
 	public boolean showInThirdPerson = true;
 	/** Keep drawing this crosshair while the debug screen (F3) is open instead of the vanilla axes. */
 	public boolean showInDebug = true;
-	/** Show the attack cooldown bar under the crosshair. */
+	// ---- Attack cooldown indicator ----
+
+	/** Show the attack cooldown indicator. */
 	public boolean attackIndicator = true;
+	/** See {@link CooldownRenderer.Style}. */
+	public int cdStyle = 0;
+	public int cdBackgroundColor = 0xC0303030;
+	public int cdFillColor = 0xFFFFFFFF;
+	public int cdReadyColor = 0xFF55FF55;
+	/** Fill color fades from {@link #cdFillColor} to {@link #cdReadyColor} while charging. */
+	public boolean cdGradient = false;
+	/** Bar length or ring diameter. */
+	public int cdLength = 16;
+	public int cdThickness = 2;
+	/** 0 = below, 1 = above, 2 = left, 3 = right, 4 = center. */
+	public int cdPosition = 0;
+	public int cdOffsetX = 0;
+	public int cdOffsetY = 0;
+	/** Show the remaining time (draining) instead of the charge (filling). */
+	public boolean cdReverse = false;
+	/** Keep the indicator visible in {@link #cdReadyColor} when fully charged. */
+	public boolean cdShowWhenReady = false;
+	public boolean cdPercent = false;
+
+	// ---- Hit particles ----
+
+	/** Spawn custom particles when you hit an entity. */
+	public boolean particlesEnabled = true;
+	/** 0 = only critical / enchanted hits (replaces vanilla particles), 1 = every hit. */
+	public int particleTrigger = 0;
+	/** Hide the vanilla crit and enchanted-hit particles. */
+	public boolean hideVanillaParticles = true;
+	/** Index into {@link HitParticles#TYPES}. */
+	public int particleType = 0;
+	public int particleColor = 0xFFFF4040;
+	public boolean particleTint = true;
+	public boolean particleRainbow = false;
+	public float particleSize = 1.0F;
+	public int particleCount = 15;
+	public float particleSpeed = 1.0F;
+	public float particleGravity = 0.0F;
+	/** Life time multiplier. */
+	public float particleLifetime = 1.0F;
 
 	public static CrosshairConfig get() {
 		if (instance == null) {
@@ -118,6 +159,19 @@ public final class CrosshairConfig {
 		offsetY = Math.clamp(offsetY, -200, 200);
 		opacity = Math.clamp(opacity, 0.0F, 1.0F);
 		outline = Math.floorMod(outline, 3);
+		cdStyle = Math.floorMod(cdStyle, CooldownRenderer.Style.values().length);
+		cdLength = Math.clamp(cdLength, 2, 128);
+		cdThickness = Math.clamp(cdThickness, 1, 32);
+		cdPosition = Math.floorMod(cdPosition, 5);
+		cdOffsetX = Math.clamp(cdOffsetX, -200, 200);
+		cdOffsetY = Math.clamp(cdOffsetY, -200, 200);
+		particleTrigger = Math.floorMod(particleTrigger, 2);
+		particleType = Math.floorMod(particleType, HitParticles.TYPES.size());
+		particleSize = Math.clamp(particleSize, 0.1F, 10.0F);
+		particleCount = Math.clamp(particleCount, 1, 200);
+		particleSpeed = Math.clamp(particleSpeed, 0.0F, 5.0F);
+		particleGravity = Math.clamp(particleGravity, -2.0F, 2.0F);
+		particleLifetime = Math.clamp(particleLifetime, 0.1F, 10.0F);
 	}
 
 	public static int clampGrid(int size) {

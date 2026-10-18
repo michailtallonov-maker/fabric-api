@@ -40,19 +40,17 @@ public final class CrosshairRenderer {
 		float size = config.gridSize * config.scale;
 		float centerX = (float) Math.floor((graphics.guiWidth() - size) / 2.0F) + size / 2.0F + config.offsetX;
 		float centerY = (float) Math.floor((graphics.guiHeight() - size) / 2.0F) + size / 2.0F + config.offsetY;
+		float progress = minecraft.player.getAttackStrengthScale(0.0F);
+		boolean fillStyle = config.attackIndicator && config.cdStyle == CooldownRenderer.Style.CROSSHAIR_FILL.ordinal()
+				&& (progress < 1.0F || config.cdShowWhenReady);
 
-		draw(graphics, config, centerX, centerY, config.scale);
+		// The "crosshair fill" indicator draws the crosshair itself.
+		if (!fillStyle) {
+			draw(graphics, config, centerX, centerY, config.scale);
+		}
 
 		if (config.attackIndicator) {
-			float strength = minecraft.player.getAttackStrengthScale(0.0F);
-
-			if (strength < 1.0F) {
-				int width = 16;
-				int x = Math.round(centerX) - width / 2;
-				int y = Math.round(centerY + size / 2.0F) + 3;
-				graphics.fill(x, y, x + width, y + 2, applyOpacity(0xFF404040, config.opacity));
-				graphics.fill(x, y, x + Math.round(width * strength), y + 2, applyOpacity(0xFFFFFFFF, config.opacity));
-			}
+			CooldownRenderer.draw(graphics, config, centerX, centerY, size / 2.0F, progress, config.opacity);
 		}
 	}
 
@@ -60,6 +58,15 @@ public final class CrosshairRenderer {
 	 * Draws the crosshair with all transforms (scale, rotation, flips) around the given center point.
 	 */
 	public static void draw(GuiGraphicsExtractor graphics, CrosshairConfig config, float centerX, float centerY, float scale) {
+		drawFilled(graphics, config, centerX, centerY, scale, -1.0F, 0, 0, config.opacity);
+	}
+
+	/**
+	 * Same as {@link #draw}, but when {@code fill >= 0} the drawn pixels use {@code emptyColor} and the bottom
+	 * {@code fill} part of the grid uses {@code fillColor} (used by the cooldown indicator).
+	 */
+	public static void drawFilled(GuiGraphicsExtractor graphics, CrosshairConfig config, float centerX, float centerY, float scale,
+			float fill, int emptyColor, int fillColor, float opacity) {
 		int size = config.gridSize;
 		Matrix3x2fStack pose = graphics.pose();
 		pose.pushMatrix();
@@ -69,7 +76,7 @@ public final class CrosshairRenderer {
 		pose.translate(-size / 2.0F, -size / 2.0F);
 
 		if (config.outline != 0) {
-			int outlineColor = applyOpacity(OUTLINE_COLORS[config.outline], config.opacity);
+			int outlineColor = applyOpacity(OUTLINE_COLORS[config.outline], opacity);
 
 			// Outline may stick out of the grid by one pixel on every side.
 			for (int y = -1; y <= size; y++) {
@@ -81,12 +88,19 @@ public final class CrosshairRenderer {
 			}
 		}
 
+		// Rows at or below this one count as "filled".
+		float fillFrom = size - fill * size;
+
 		for (int y = 0; y < size; y++) {
 			for (int x = 0; x < size; x++) {
 				int color = config.getPixel(x, y);
+				if (color == 0) continue;
 
-				if (color != 0) {
-					graphics.fill(x, y, x + 1, y + 1, applyOpacity(color, config.opacity));
+				if (fill >= 0.0F) {
+					color = y + 1 > fillFrom ? fillColor : emptyColor;
+					graphics.fill(x, y, x + 1, y + 1, color);
+				} else {
+					graphics.fill(x, y, x + 1, y + 1, applyOpacity(color, opacity));
 				}
 			}
 		}
