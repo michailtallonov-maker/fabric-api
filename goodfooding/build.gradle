@@ -2,11 +2,11 @@ plugins {
 	id 'net.fabricmc.fabric-loom' version "${loom_version}"
 }
 
-version = project.mod_version
+version = "${project.mod_version}+${project.minecraft_version}"
 group = project.maven_group
 
 base {
-	archivesName = 'freecam'
+	archivesName = 'goodfooding'
 }
 
 dependencies {
@@ -16,10 +16,11 @@ dependencies {
 }
 
 processResources {
-	inputs.property 'version', project.version
+	def props = [version: project.version.toString(), minecraft_version: project.minecraft_version.toString()]
+	inputs.properties props
 
 	filesMatching('fabric.mod.json') {
-		expand 'version': project.version
+		expand props
 	}
 }
 

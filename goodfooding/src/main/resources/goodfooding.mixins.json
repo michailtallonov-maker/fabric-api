@@ -1,9 +1,9 @@
 {
   "required": true,
-  "package": "io.github.michailtallonov.freecam.mixin",
+  "package": "io.github.michailtallonov.goodfooding.mixin",
   "compatibilityLevel": "JAVA_25",
   "client": [
-    "CameraMixin",
+    "GoodfoodingDetachedMixin",
     "EntityMixin",
     "FirstPersonHandsAndItemsMixin"
   ],

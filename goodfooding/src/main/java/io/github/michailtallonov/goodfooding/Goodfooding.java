@@ -1,4 +1,4 @@
-package io.github.michailtallonov.freecam;
+package io.github.michailtallonov.goodfooding;
 
 import java.lang.reflect.Field;
 
@@ -18,34 +18,34 @@ import net.minecraft.world.entity.Marker;
 import net.minecraft.world.phys.Vec3;
 
 /**
- * Client-side free camera.
+ * Client-side goodfooding.
  *
- * <p>While enabled, the game's camera entity is swapped for a private {@link Marker} that is never added to the level,
- * so the server knows nothing about it. The camera has no collision and simply moves wherever the movement keys say,
+ * <p>While enabled, the game's goodfooding entity is swapped for a private {@link Marker} that is never added to the level,
+ * so the server knows nothing about it. The goodfooding has no collision and simply moves wherever the movement keys say,
  * which lets it pass through blocks. The real player stays where it was and receives no movement input.
  */
-public final class Freecam {
-	private static final Logger LOGGER = LoggerFactory.getLogger(FreecamClient.MOD_ID);
+public final class Goodfooding {
+	private static final Logger LOGGER = LoggerFactory.getLogger(GoodfoodingClient.MOD_ID);
 
 	/** Speed in blocks per tick. */
 	private static final double BASE_SPEED = 0.6;
 	private static final double SPRINT_MULTIPLIER = 3.0;
-	/** How quickly the camera reaches its target velocity (0..1); lower values give a smoother glide. */
+	/** How quickly the goodfooding reaches its target velocity (0..1); lower values give a smoother glide. */
 	private static final double ACCELERATION = 0.35;
 
-	private static @Nullable Marker camera;
+	private static @Nullable Marker goodfooding;
 	private static Vec3 velocity = Vec3.ZERO;
 
 	private static @Nullable LocalPlayer savedPlayer;
 	private static @Nullable ClientInput savedInput;
-	private static @Nullable CameraType savedCameraType;
+	private static @Nullable CameraType savedPerspective;
 	private static @Nullable Boolean savedSmartCull;
 
-	private Freecam() {
+	private Goodfooding() {
 	}
 
 	public static boolean isEnabled() {
-		return camera != null;
+		return goodfooding != null;
 	}
 
 	public static void toggle(Minecraft client) {
@@ -63,42 +63,42 @@ public final class Freecam {
 			return;
 		}
 
-		Marker cam = new Marker(EntityTypes.MARKER, client.level);
+		Marker goodfoodingEntity = new Marker(EntityTypes.MARKER, client.level);
 		Vec3 eye = player.getEyePosition();
-		cam.setPos(eye.x, eye.y - cam.getEyeHeight(), eye.z);
-		cam.setYRot(player.getYRot());
-		cam.setXRot(player.getXRot());
-		cam.yRotO = cam.getYRot();
-		cam.xRotO = cam.getXRot();
-		cam.xo = cam.getX();
-		cam.yo = cam.getY();
-		cam.zo = cam.getZ();
+		goodfoodingEntity.setPos(eye.x, eye.y - goodfoodingEntity.getEyeHeight(), eye.z);
+		goodfoodingEntity.setYRot(player.getYRot());
+		goodfoodingEntity.setXRot(player.getXRot());
+		goodfoodingEntity.yRotO = goodfoodingEntity.getYRot();
+		goodfoodingEntity.xRotO = goodfoodingEntity.getXRot();
+		goodfoodingEntity.xo = goodfoodingEntity.getX();
+		goodfoodingEntity.yo = goodfoodingEntity.getY();
+		goodfoodingEntity.zo = goodfoodingEntity.getZ();
 		velocity = Vec3.ZERO;
 
-		// A bare ClientInput never reports any pressed keys, so the player stands still while the keys drive the camera.
+		// A bare ClientInput never reports any pressed keys, so the player stands still while the keys drive the goodfooding.
 		savedPlayer = player;
 		savedInput = player.input;
 		player.input = new ClientInput();
 
-		savedCameraType = client.options.getCameraType();
+		savedPerspective = client.options.getCameraType();
 		client.options.setCameraType(CameraType.FIRST_PERSON);
 
-		// Without this, sections around the camera get culled away while it is inside solid blocks.
+		// Without this, sections around the goodfooding get culled away while it is inside solid blocks.
 		savedSmartCull = setSmartCull(client, false);
 
-		camera = cam;
-		client.setCameraEntity(cam);
-		client.gui.hud.setOverlayMessage(Component.translatable("freecam.enabled"), false);
+		goodfooding = goodfoodingEntity;
+		client.setCameraEntity(goodfoodingEntity);
+		client.gui.hud.setOverlayMessage(Component.translatable("goodfooding.enabled"), false);
 	}
 
 	public static void disable(Minecraft client, boolean notify) {
-		Marker cam = camera;
+		Marker goodfoodingEntity = goodfooding;
 
-		if (cam == null) {
+		if (goodfoodingEntity == null) {
 			return;
 		}
 
-		camera = null;
+		goodfooding = null;
 		velocity = Vec3.ZERO;
 
 		LocalPlayer player = client.player;
@@ -108,12 +108,12 @@ public final class Freecam {
 			player.input = savedInput;
 		}
 
-		if (client.getCameraEntity() == cam) {
+		if (client.getCameraEntity() == goodfoodingEntity) {
 			client.setCameraEntity(player);
 		}
 
-		if (savedCameraType != null) {
-			client.options.setCameraType(savedCameraType);
+		if (savedPerspective != null) {
+			client.options.setCameraType(savedPerspective);
 		}
 
 		if (savedSmartCull != null) {
@@ -122,42 +122,42 @@ public final class Freecam {
 
 		savedPlayer = null;
 		savedInput = null;
-		savedCameraType = null;
+		savedPerspective = null;
 		savedSmartCull = null;
 
 		if (notify && player != null) {
-			client.gui.hud.setOverlayMessage(Component.translatable("freecam.disabled"), false);
+			client.gui.hud.setOverlayMessage(Component.translatable("goodfooding.disabled"), false);
 		}
 	}
 
 	/**
-	 * Applies mouse movement to the camera instead of the player.
+	 * Applies mouse movement to the goodfooding instead of the player.
 	 */
 	public static void turn(double yRot, double xRot) {
-		if (camera != null) {
-			camera.turn(yRot, xRot);
+		if (goodfooding != null) {
+			goodfooding.turn(yRot, xRot);
 		}
 	}
 
 	static void tick(Minecraft client) {
-		Marker cam = camera;
+		Marker goodfoodingEntity = goodfooding;
 
-		if (cam == null) {
+		if (goodfoodingEntity == null) {
 			return;
 		}
 
-		// Something else took over the camera (respawn, dimension change, spectating via the server...).
-		if (client.player == null || client.level == null || client.getCameraEntity() != cam || cam.level() != client.level) {
+		// Something else took over the goodfooding (respawn, dimension change, spectating via the server...).
+		if (client.player == null || client.level == null || client.getCameraEntity() != goodfoodingEntity || goodfoodingEntity.level() != client.level) {
 			disable(client, false);
 			return;
 		}
 
 		blockInteraction(client.options);
-		move(cam, client.options);
+		move(goodfoodingEntity, client.options);
 	}
 
 	/**
-	 * Interacting would target whatever the free camera is looking at, which is far from the player.
+	 * Interacting would target whatever the goodfooding is looking at, which is far from the player.
 	 * Swallow those inputs so nothing gets sent to the server that the player could not have done.
 	 */
 	private static void blockInteraction(Options options) {
@@ -170,12 +170,12 @@ public final class Freecam {
 		}
 	}
 
-	private static void move(Marker cam, Options options) {
+	private static void move(Marker goodfoodingEntity, Options options) {
 		double forward = axis(options.keyUp, options.keyDown);
 		double strafe = axis(options.keyLeft, options.keyRight);
 		double vertical = axis(options.keyJump, options.keyShift);
 
-		double yaw = Math.toRadians(cam.getYRot());
+		double yaw = Math.toRadians(goodfoodingEntity.getYRot());
 		double sin = Math.sin(yaw);
 		double cos = Math.cos(yaw);
 
@@ -193,10 +193,10 @@ public final class Freecam {
 		}
 
 		// Store the previous position so the renderer interpolates smoothly between ticks.
-		cam.xo = cam.getX();
-		cam.yo = cam.getY();
-		cam.zo = cam.getZ();
-		cam.setPos(cam.getX() + velocity.x, cam.getY() + velocity.y, cam.getZ() + velocity.z);
+		goodfoodingEntity.xo = goodfoodingEntity.getX();
+		goodfoodingEntity.yo = goodfoodingEntity.getY();
+		goodfoodingEntity.zo = goodfoodingEntity.getZ();
+		goodfoodingEntity.setPos(goodfoodingEntity.getX() + velocity.x, goodfoodingEntity.getY() + velocity.y, goodfoodingEntity.getZ() + velocity.z);
 	}
 
 	private static double axis(KeyMapping positive, KeyMapping negative) {

@@ -1,0 +1,47 @@
+name: Build Goodfooding
+on:
+  push:
+    paths:
+      - 'goodfooding/**'
+      - '.github/workflows/goodfooding.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-24.04
+    strategy:
+      # One at a time, so both jobs don't try to create the release simultaneously.
+      max-parallel: 1
+      fail-fast: false
+      matrix:
+        include:
+          - minecraft: '26.2'
+            fabric_api: '0.161.0+26.2'
+          - minecraft: '26.3'
+            fabric_api: '0.163.0+26.3'
+    defaults:
+      run:
+        working-directory: goodfooding
+    steps:
+      - uses: actions/setup-java@v5
+        with:
+          distribution: 'microsoft'
+          java-version: '25'
+      - uses: actions/checkout@v6
+      - run: chmod +x gradlew && ./gradlew build --stacktrace -Pminecraft_version=${{ matrix.minecraft }} -Pfabric_api_version=${{ matrix.fabric_api }}
+      - uses: actions/upload-artifact@v7
+        with:
+          name: goodfooding-${{ matrix.minecraft }}
+          path: goodfooding/build/libs/
+      # Publish the jars as a release so they can be downloaded by a direct link.
+      - uses: softprops/action-gh-release@v2
+        with:
+          tag_name: goodfooding-latest
+          name: Goodfooding (Minecraft 26.2 / 26.3)
+          body: Client-side Goodfooding mod for Fabric, Minecraft 26.2 and 26.3. Pick the jar matching your Minecraft version and put it into .minecraft/mods together with Fabric API.
+          target_commitish: ${{ github.sha }}
+          files: goodfooding/build/libs/goodfooding-*+*.jar
+          overwrite_files: true

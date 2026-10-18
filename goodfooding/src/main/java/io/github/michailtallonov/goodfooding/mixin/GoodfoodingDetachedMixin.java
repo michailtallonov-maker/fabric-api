@@ -1,4 +1,4 @@
-package io.github.michailtallonov.freecam.mixin;
+package io.github.michailtallonov.goodfooding.mixin;
 
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -7,16 +7,16 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import net.minecraft.client.Camera;
 
-import io.github.michailtallonov.freecam.Freecam;
+import io.github.michailtallonov.goodfooding.Goodfooding;
 
 /**
- * Treat the free camera as detached so the player's own body is rendered.
+ * Treat the goodfooding as detached so the player's own body is rendered.
  */
 @Mixin(Camera.class)
-public abstract class CameraMixin {
+public abstract class GoodfoodingDetachedMixin {
 	@Inject(method = "isDetached", at = @At("HEAD"), cancellable = true, require = 0)
-	private void freecam$detached(CallbackInfoReturnable<Boolean> cir) {
-		if (Freecam.isEnabled()) {
+	private void goodfooding$detached(CallbackInfoReturnable<Boolean> cir) {
+		if (Goodfooding.isEnabled()) {
 			cir.setReturnValue(true);
 		}
 	}

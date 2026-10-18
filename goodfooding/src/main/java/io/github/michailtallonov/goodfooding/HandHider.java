@@ -1,4 +1,4 @@
-package io.github.michailtallonov.freecam;
+package io.github.michailtallonov.goodfooding;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;

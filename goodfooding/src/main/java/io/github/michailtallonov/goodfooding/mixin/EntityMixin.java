@@ -1,4 +1,4 @@
-package io.github.michailtallonov.freecam.mixin;
+package io.github.michailtallonov.goodfooding.mixin;
 
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -8,17 +8,17 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.world.entity.Entity;
 
-import io.github.michailtallonov.freecam.Freecam;
+import io.github.michailtallonov.goodfooding.Goodfooding;
 
 /**
- * Mouse look calls {@code turn} on the local player; while freecam is on, rotate the camera instead.
+ * Mouse look calls {@code turn} on the local player; while goodfooding is on, rotate the goodfooding view instead.
  */
 @Mixin(Entity.class)
 public abstract class EntityMixin {
 	@Inject(method = "turn", at = @At("HEAD"), cancellable = true)
-	private void freecam$redirectTurn(double yRot, double xRot, CallbackInfo ci) {
-		if ((Object) this instanceof LocalPlayer && Freecam.isEnabled()) {
-			Freecam.turn(yRot, xRot);
+	private void goodfooding$redirectTurn(double yRot, double xRot, CallbackInfo ci) {
+		if ((Object) this instanceof LocalPlayer && Goodfooding.isEnabled()) {
+			Goodfooding.turn(yRot, xRot);
 			ci.cancel();
 		}
 	}
