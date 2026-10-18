@@ -5,7 +5,7 @@
   "client": [
     "GoodfoodingDetachedMixin",
     "EntityMixin",
-    "FirstPersonHandsAndItemsMixin"
+    "HandsMixin"
   ],
   "injectors": {
     "defaultRequire": 1

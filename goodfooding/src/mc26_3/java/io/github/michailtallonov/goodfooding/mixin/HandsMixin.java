@@ -15,7 +15,7 @@ import io.github.michailtallonov.goodfooding.HandHider;
  * Lower the first-person hands out of view while flying around, they don't belong to the goodfooding.
  */
 @Mixin(FirstPersonHandsAndItems.class)
-public abstract class FirstPersonHandsAndItemsMixin {
+public abstract class HandsMixin {
 	@Inject(method = "tick", at = @At("TAIL"), require = 0)
 	private void goodfooding$hideHands(LocalPlayer player, CallbackInfo ci) {
 		if (Goodfooding.isEnabled()) {

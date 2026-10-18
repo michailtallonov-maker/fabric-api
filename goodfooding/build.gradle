@@ -9,6 +9,9 @@ base {
 	archivesName = 'goodfooding'
 }
 
+// Version-specific code lives in src/mc<version>/java, e.g. src/mc26_2/java.
+sourceSets.main.java.srcDir "src/mc${project.minecraft_version.replace('.', '_')}/java"
+
 dependencies {
 	minecraft "com.mojang:minecraft:${project.minecraft_version}"
 	implementation "net.fabricmc:fabric-loader:${project.loader_version}"
