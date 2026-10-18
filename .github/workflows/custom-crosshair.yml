@@ -7,6 +7,8 @@ on:
   workflow_dispatch:
 jobs:
   build:
+    permissions:
+      contents: write
     runs-on: ubuntu-24.04
     defaults:
       run:
@@ -22,10 +24,14 @@ jobs:
         with:
           name: custom-crosshair
           path: custom-crosshair/build/libs/*.jar
-      - name: Print jar as base64
+      - name: Commit built jar to dist/
+        if: github.event_name == 'push'
         run: |
-          for f in build/libs/*.jar; do
-            echo "JAR-BEGIN $(basename "$f") $(sha256sum "$f" | cut -d' ' -f1)"
-            base64 -w 1000 "$f"
-            echo "JAR-END"
-          done
+          mkdir -p ../dist
+          rm -f ../dist/*.jar
+          cp build/libs/*.jar ../dist/
+          cd ..
+          git config user.name "github-actions[bot]"
+          git config user.email "41898299+github-actions[bot]@users.noreply.github.com"
+          git add dist
+          git diff --cached --quiet || (git commit -m "Update prebuilt custom-crosshair jar" && git push origin HEAD:${GITHUB_REF_NAME})
