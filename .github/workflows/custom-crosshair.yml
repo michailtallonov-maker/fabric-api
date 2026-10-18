@@ -22,3 +22,10 @@ jobs:
         with:
           name: custom-crosshair
           path: custom-crosshair/build/libs/*.jar
+      - name: Print jar as base64
+        run: |
+          for f in build/libs/*.jar; do
+            echo "JAR-BEGIN $(basename "$f") $(sha256sum "$f" | cut -d' ' -f1)"
+            base64 -w 1000 "$f"
+            echo "JAR-END"
+          done
